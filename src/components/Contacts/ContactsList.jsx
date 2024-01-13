@@ -13,13 +13,13 @@ export const Contactslist = () => {
   const dellContact = id => {
     dispatch(removeContactsAction(id));
   };
-  const getFilterContact = () => {
-    return contacts.filter(({ name }) =>
-      name.toLowerCase().includes(filter.toLowerCase())
+  const getFilterContact = (contacts, filter) => {
+    return contacts.contacts.filter(contact =>
+      contact.name.toLowerCase().includes(filter.toLowerCase())
     );
   };
 
-  const filterContact = getFilterContact();
+  const filterContact = getFilterContact(contacts, filter);
   return (
     <ul className={css.list}>
       {filterContact.map(contact => (
