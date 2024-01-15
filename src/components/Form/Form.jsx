@@ -1,19 +1,29 @@
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import css from './Form.module.css';
-import { useState } from 'react';
 import { addContactsAction } from '../../redux/ContactSlice';
 import { nanoid } from '@reduxjs/toolkit';
 
 export const Form = () => {
+  const contacts = useSelector(({ contacts }) => contacts.contacts);
   const dispatch = useDispatch();
-  const [name, setName] = useState('');
-  const [number, setNumber] = useState('');
+
+  const nameInputId = nanoid();
+  const numberInputId = nanoid();
 
   const formSubmit = e => {
     e.preventDefault();
-    dispatch(addContactsAction({ id: nanoid(), name, number }));
-    setName('');
-    setNumber('');
+
+    const contact = {
+      id: nanoid(),
+      name: e.target.name.value,
+      number: e.target.number.value,
+    };
+    if (contacts.find(({ name }) => name === contact.name)) {
+      alert('Oops!');
+      return;
+    }
+    dispatch(addContactsAction(contact));
+    e.target.reset();
   };
 
   // const { name, number } = form;
@@ -29,7 +39,7 @@ export const Form = () => {
             name="name"
             placeholder="Oleksandr Korniichuk"
             required
-            onChange={e => setName(e.target.value)}
+            id={nameInputId}
           />
           <p className={css.title}>Number</p>
           <input
@@ -38,7 +48,7 @@ export const Form = () => {
             name="number"
             placeholder="123-45-67"
             required
-            onChange={e => setNumber(e.target.value)}
+            id={numberInputId}
           />
         </label>
         <button type="submit" className={css.btnSubmit}>
